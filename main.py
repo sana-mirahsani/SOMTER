@@ -19,25 +19,24 @@ end function"""
 import pandas as pd
 import numpy as np
 
-def find_control_points(y_train: pd.Series):
+def phi_func(y):
+    return y
+def check_rare(y,y_median,threshold):
+    phi_y = phi_func(y)
 
-    Q1 = np.quantile(y_train, 0.25)
-    Q2 = np.quantile(y_train, 0.50)  # median
-    Q3 = np.quantile(y_train, 0.75)
-
-    print("Q1:", Q1)
-    print("Q2:", Q2)
-    print("Q3:", Q3)
-
-    IQR = Q3 - Q1
-
-    lower_fence = Q1 - 1.5 * IQR
-    upper_fence = Q3 + 1.5 * IQR
-
-    print("lower_fence:",lower_fence)
-    print("upper_fence:", upper_fence)
-
-    return (Q1, Q2, Q3, lower_fence, upper_fence)
+    if (phi_y > threshold) and y < y_median:
+        return True
+    else:
+        return False
+    
+def genSynthCases(rare_sample, percentage_over_sampling, num_neighbours):
+    pass
 
 def SmoteR(D: pd.DataFrame, tE: float, o: float, u: float, k: int):
-    pass
+    y_median = y.median()
+    all_new_cases = []
+
+    for x,y in D:
+        if check_rare(y,y_median,tE):
+            new_cases = genSynthCases(y, percentage_over_sampling = o, num_neighbours= k)
+            all_new_cases.append(new_cases)
